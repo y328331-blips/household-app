@@ -1,0 +1,93 @@
+@page "/input"
+@rendermode InteractiveWebAssembly
+@using HouseholdApp.Client.Models
+@using HouseholdApp.Client.Services
+@inject TransactionApiClient Api
+@inject NavigationManager Nav
+
+<PageTitle>入力</PageTitle>
+
+<h1>記録する</h1>
+
+<EditForm Model="@model" OnValidSubmit="SaveAsync" class="entry-form">
+    <div class="form-row">
+        <label for="date">日付</label>
+        <InputDate id="date" @bind-Value="model.Date" />
+    </div>
+
+    <div class="form-row">
+        <label>種別</label>
+        <div class="type-toggle">
+            <label class="@(model.Type == TransactionType.Expense ? "active" : "")">
+                <input type="radio" name="type" checked="@(model.Type == TransactionType.Expense)"
+                       @onchange="() => model.Type = TransactionType.Expense" />
+                支出
+            </label>
+            <label class="@(model.Type == TransactionType.Income ? "active" : "")">
+                <input type="radio" name="type" checked="@(model.Type == TransactionType.Income)"
+                       @onchange="() => model.Type = TransactionType.Income" />
+                収入
+            </label>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="category">項目</label>
+        <input id="category" list="category-options" @bind="model.Category" @bind:event="oninput"
+               placeholder="例）日用品" />
+        <datalist id="category-options">
+            <option value="日用品" />
+            <option value="食費" />
+            <option value="交通費" />
+            <option value="交際費" />
+            <option value="給与" />
+            <option value="その他" />
+        </datalist>
+    </div>
+
+    <div class="form-row">
+        <label for="amount">金額（円）</label>
+        <InputNumber id="amount" @bind-Value="model.Amount" placeholder="例）1000" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <p class="error-text">@error</p>
+    }
+
+    <button type="submit" class="save-button" disabled="@saving">保存する</button>
+</EditForm>
+
+<a class="back-link" href="/">← 一覧にもどる</a>
+
+@code {
+    private TransactionItem model = new()
+    {
+        Date = DateOnly.FromDateTime(DateTime.Today),
+        Type = TransactionType.Expense
+    };
+
+    private bool saving;
+    private string? error;
+
+    private async Task SaveAsync()
+    {
+        if (string.IsNullOrWhiteSpace(model.Category) || model.Amount <= 0)
+        {
+            error = "項目と金額（1円以上）を入力してください。";
+            return;
+        }
+
+        error = null;
+        saving = true;
+        try
+        {
+            await Api.AddAsync(model);
+            Nav.NavigateTo("/");
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+}
