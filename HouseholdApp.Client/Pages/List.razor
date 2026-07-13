@@ -33,16 +33,23 @@ else
     @if (categoryTotals.Count > 0)
     {
         <h2>支出の内訳</h2>
-        <div class="bar-chart">
+        <div class="stacked-bar">
             @foreach (var (category, amount) in categoryTotals)
             {
-                var percent = totalExpense == 0 ? 0 : amount * 100 / totalExpense;
-                <div class="bar-row">
-                    <span class="bar-label">@category</span>
-                    <div class="bar-track">
-                        <div class="bar-fill" style="width:@(percent)%"></div>
-                    </div>
-                    <span class="bar-amount">¥@amount.ToString("N0")</span>
+                <div class="stacked-bar-segment"
+                     style="flex-grow:@amount.ToString(System.Globalization.CultureInfo.InvariantCulture);background:@GetCategoryColor(category)"
+                     title="@category ¥@amount.ToString("N0")"></div>
+            }
+        </div>
+        <div class="category-legend">
+            @foreach (var (category, amount) in categoryTotals)
+            {
+                var percent = totalExpense == 0 ? 0 : Math.Round(amount * 100.0 / totalExpense);
+                <div class="legend-row">
+                    <span class="legend-swatch" style="background:@GetCategoryColor(category)"></span>
+                    <span class="legend-label">@category</span>
+                    <span class="legend-amount">¥@amount.ToString("N0")</span>
+                    <span class="legend-percent">@percent%</span>
                 </div>
             }
         </div>
@@ -90,6 +97,20 @@ else
 <a class="fab" href="/input" title="記録を追加">＋</a>
 
 @code {
+    // Fixed category → color mapping, so a category's color stays stable
+    // regardless of its amount ranking. Unrecognized categories fall back
+    // to a neutral "other" swatch rather than a generated hue.
+    private static readonly Dictionary<string, string> CategoryColors = new()
+    {
+        ["日用品"] = "var(--cat-1)",
+        ["食費"] = "var(--cat-2)",
+        ["交通費"] = "var(--cat-3)",
+        ["交際費"] = "var(--cat-4)",
+    };
+
+    private static string GetCategoryColor(string category) =>
+        CategoryColors.GetValueOrDefault(category, "var(--cat-other)");
+
     private List<TransactionItem> transactions = [];
     private bool loading = true;
     private int totalIncome;

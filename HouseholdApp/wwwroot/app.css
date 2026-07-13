@@ -11,6 +11,13 @@
     --color-balance-tint: #efebe4;
     --color-track: #e5ddd2;
     --color-accent: #1f6f9c;
+
+    /* expense category identity colors (fixed order, all-pairs CVD-checked) */
+    --cat-1: #BF6541;
+    --cat-2: #A84B78;
+    --cat-3: #2F6C9E;
+    --cat-4: #A87F1E;
+    --cat-other: #8A7D6E;
 }
 
 * {
@@ -111,41 +118,57 @@ h2 {
     font-weight: 700;
 }
 
-/* bar chart */
-.bar-chart {
+/* expense breakdown: single stacked bar + legend */
+.stacked-bar {
+    display: flex;
+    gap: 2px;
+    height: 16px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--color-track);
+}
+
+.stacked-bar-segment {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: 100%;
+}
+
+.category-legend {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+}
+
+.legend-row {
+    display: grid;
+    grid-template-columns: 1rem 1fr 4rem 3.5rem;
+    align-items: center;
     gap: 0.6rem;
 }
 
-.bar-row {
-    display: grid;
-    grid-template-columns: 6rem 1fr 6rem;
-    align-items: center;
-    gap: 0.75rem;
+.legend-swatch {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 3px;
 }
 
-.bar-label {
+.legend-label {
     font-size: 0.85rem;
-    color: var(--color-text-muted);
+    color: var(--color-text);
 }
 
-.bar-track {
-    background: var(--color-track);
-    border-radius: 999px;
-    height: 10px;
-    overflow: hidden;
-}
-
-.bar-fill {
-    background: var(--color-expense);
-    height: 100%;
-    border-radius: 999px;
-}
-
-.bar-amount {
+.legend-amount {
     font-size: 0.85rem;
     text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.legend-percent {
+    font-size: 0.8rem;
+    text-align: right;
+    color: var(--color-text-muted);
     font-variant-numeric: tabular-nums;
 }
 
