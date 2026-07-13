@@ -1,16 +1,16 @@
 :root {
-    --color-bg: #f4efe8;
+    --color-bg: #f8f3ea;
     --color-surface: #fffdfa;
     --color-border: #e3d9c9;
     --color-text: #3d3733;
     --color-text-muted: #8a8078;
-    --color-income: #1f6f9c;
-    --color-income-tint: #e6eef1;
-    --color-expense: #c25a3f;
-    --color-expense-tint: #f6e8e3;
-    --color-balance: #7d7263;
+    --color-income: #A4C0C9;
+    --color-expense: #E8B4B4;
+    --color-expense-text: #b0533f;
+    --color-balance: #D2BA89;
     --color-balance-tint: #efebe4;
     --color-track: #e5ddd2;
+    --color-accent: #1f6f9c;
 }
 
 * {
@@ -67,7 +67,7 @@ h1 {
 
 h2 {
     font-size: 1.05rem;
-    color: var(--color-text-muted);
+    color: var(--color-text);
     margin: 2rem 0 0.75rem;
 }
 
@@ -102,7 +102,7 @@ h2 {
 }
 
 .card-label {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     color: var(--color-text-muted);
 }
 
@@ -182,13 +182,13 @@ h2 {
 }
 
 .type-tag.income {
-    background: var(--color-income-tint);
-    color: var(--color-income);
+    background: var(--color-income);
+    color: var(--color-text);
 }
 
 .type-tag.expense {
-    background: var(--color-expense-tint);
-    color: var(--color-expense);
+    background: var(--color-expense);
+    color: var(--color-text);
 }
 
 /* form */
@@ -249,7 +249,7 @@ h2 {
 }
 
 .save-button {
-    background: var(--color-income);
+    background: var(--color-accent);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -264,7 +264,7 @@ h2 {
 }
 
 .error-text {
-    color: var(--color-expense);
+    color: var(--color-expense-text);
     font-size: 0.85rem;
 }
 
@@ -282,7 +282,7 @@ h2 {
     width: 3.2rem;
     height: 3.2rem;
     border-radius: 50%;
-    background: var(--color-income);
+    background: var(--color-accent);
     color: #fff;
     display: flex;
     align-items: center;
