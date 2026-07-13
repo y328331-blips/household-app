@@ -175,6 +175,25 @@ h2 {
     font-variant-numeric: tabular-nums;
 }
 
+.delete-col {
+    text-align: right;
+    width: 1%;
+    white-space: nowrap;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+}
+
+.delete-button:hover {
+    color: var(--color-expense-text);
+}
+
 .type-tag {
     font-size: 0.75rem;
     padding: 0.15rem 0.55rem;

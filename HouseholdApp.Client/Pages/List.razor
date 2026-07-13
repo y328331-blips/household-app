@@ -3,6 +3,7 @@
 @using HouseholdApp.Client.Models
 @using HouseholdApp.Client.Services
 @inject TransactionApiClient Api
+@inject IJSRuntime JS
 
 <PageTitle>家計簿</PageTitle>
 
@@ -61,6 +62,7 @@ else
                     <th>項目</th>
                     <th>種別</th>
                     <th class="amount-col">金額</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -75,6 +77,9 @@ else
                             </span>
                         </td>
                         <td class="amount-col">¥@t.Amount.ToString("N0")</td>
+                        <td class="delete-col">
+                            <button type="button" class="delete-button" title="削除" @onclick="() => DeleteAsync(t)">削除</button>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -95,7 +100,25 @@ else
     protected override async Task OnInitializedAsync()
     {
         transactions = await Api.GetAllAsync();
+        Recalculate();
+        loading = false;
+    }
 
+    private async Task DeleteAsync(TransactionItem transaction)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"{transaction.Date:yyyy/MM/dd} {transaction.Category} ¥{transaction.Amount:N0} を削除しますか？");
+        if (!confirmed)
+        {
+            return;
+        }
+
+        await Api.DeleteAsync(transaction.Id);
+        transactions.Remove(transaction);
+        Recalculate();
+    }
+
+    private void Recalculate()
+    {
         totalIncome = transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
         totalExpense = transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
         balance = totalIncome - totalExpense;
@@ -106,7 +129,5 @@ else
             .Select(g => (Category: g.Key, Amount: g.Sum(t => t.Amount)))
             .OrderByDescending(g => g.Amount)
             .ToList();
-
-        loading = false;
     }
 }

@@ -74,4 +74,17 @@ api.MapPost("/", async (TransactionItem input, AppDbContext db) =>
     return Results.Created($"/api/transactions/{transaction.Id}", transaction);
 });
 
+api.MapDelete("/{id:int}", async (int id, AppDbContext db) =>
+{
+    var transaction = await db.Transactions.FindAsync(id);
+    if (transaction is null)
+    {
+        return Results.NotFound();
+    }
+
+    db.Transactions.Remove(transaction);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
 app.Run();
