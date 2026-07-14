@@ -12,11 +12,12 @@
     --color-track: #e5ddd2;
     --color-accent: #1f6f9c;
 
-    /* expense category identity colors (fixed order, all-pairs CVD-checked) */
-    --cat-1: #BF6541;
-    --cat-2: #A84B78;
-    --cat-3: #2F6C9E;
-    --cat-4: #A87F1E;
+    /* category identity colors */
+    --cat-1: #7A9A9E;
+    --cat-2: #B68A9A;
+    --cat-3: #6B4F72;
+    --cat-4: #C69C6D;
+    --cat-5: #A1B3C4;
     --cat-other: #8A7D6E;
 }
 
