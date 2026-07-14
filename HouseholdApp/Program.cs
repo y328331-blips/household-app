@@ -56,8 +56,8 @@ var api = app.MapGroup("/api/transactions");
 
 api.MapGet("/", async (AppDbContext db) =>
     await db.Transactions
-        .OrderByDescending(t => t.Date)
-        .ThenByDescending(t => t.Id)
+        .OrderBy(t => t.Date)
+        .ThenBy(t => t.Id)
         .ToListAsync());
 
 api.MapPost("/", async (TransactionItem input, AppDbContext db) =>
