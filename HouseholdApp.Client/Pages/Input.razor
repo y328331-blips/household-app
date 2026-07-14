@@ -35,6 +35,7 @@
     <div class="form-row">
         <label for="category">項目</label>
         <input id="category" list="category-options" @bind="model.Category" @bind:event="oninput"
+               @onfocus="OnCategoryFocus" @onblur="OnCategoryBlur"
                placeholder="例）日用品" />
         <datalist id="category-options">
             <option value="日用品" />
@@ -73,6 +74,24 @@
 
     private bool saving;
     private string? error;
+    private string? categoryBeforeFocus;
+
+    // Browsers filter <datalist> suggestions to those matching the current input
+    // value, so a prefilled category (edit mode) hides every other suggestion.
+    // Clearing on focus shows the full list; blur restores it if nothing was typed.
+    private void OnCategoryFocus()
+    {
+        categoryBeforeFocus = model.Category;
+        model.Category = string.Empty;
+    }
+
+    private void OnCategoryBlur()
+    {
+        if (string.IsNullOrWhiteSpace(model.Category) && !string.IsNullOrWhiteSpace(categoryBeforeFocus))
+        {
+            model.Category = categoryBeforeFocus;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
