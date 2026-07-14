@@ -217,6 +217,17 @@ h2 {
     color: var(--color-expense-text);
 }
 
+.edit-link {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    text-decoration: none;
+    padding: 0.2rem 0.4rem;
+}
+
+.edit-link:hover {
+    color: var(--color-accent);
+}
+
 .type-tag {
     font-size: 0.75rem;
     padding: 0.15rem 0.55rem;

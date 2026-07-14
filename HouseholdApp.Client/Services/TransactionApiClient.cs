@@ -11,9 +11,27 @@ public class TransactionApiClient(HttpClient http)
         return items ?? [];
     }
 
+    public async Task<TransactionItem?> GetAsync(int id)
+    {
+        var response = await http.GetAsync($"api/transactions/{id}");
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<TransactionItem>();
+    }
+
     public async Task AddAsync(TransactionItem item)
     {
         var response = await http.PostAsJsonAsync("api/transactions", item);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task UpdateAsync(int id, TransactionItem item)
+    {
+        var response = await http.PutAsJsonAsync($"api/transactions/{id}", item);
         response.EnsureSuccessStatusCode();
     }
 

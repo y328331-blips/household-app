@@ -1,13 +1,14 @@
 @page "/input"
+@page "/input/{Id:int}"
 @rendermode InteractiveWebAssembly
 @using HouseholdApp.Client.Models
 @using HouseholdApp.Client.Services
 @inject TransactionApiClient Api
 @inject NavigationManager Nav
 
-<PageTitle>入力</PageTitle>
+<PageTitle>@(Id is null ? "入力" : "編集")</PageTitle>
 
-<h1>記録する</h1>
+<h1>@(Id is null ? "記録する" : "記録を編集")</h1>
 
 <EditForm Model="@model" OnValidSubmit="SaveAsync" class="entry-form">
     <div class="form-row">
@@ -55,12 +56,15 @@
         <p class="error-text">@error</p>
     }
 
-    <button type="submit" class="save-button" disabled="@saving">保存する</button>
+    <button type="submit" class="save-button" disabled="@saving">@(Id is null ? "保存する" : "更新する")</button>
 </EditForm>
 
 <a class="back-link" href="/">← 一覧にもどる</a>
 
 @code {
+    [Parameter]
+    public int? Id { get; set; }
+
     private TransactionItem model = new()
     {
         Date = DateOnly.FromDateTime(DateTime.Today),
@@ -69,6 +73,21 @@
 
     private bool saving;
     private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id is int id)
+        {
+            var existing = await Api.GetAsync(id);
+            if (existing is null)
+            {
+                Nav.NavigateTo("/");
+                return;
+            }
+
+            model = existing;
+        }
+    }
 
     private async Task SaveAsync()
     {
@@ -82,7 +101,15 @@
         saving = true;
         try
         {
-            await Api.AddAsync(model);
+            if (Id is int id)
+            {
+                await Api.UpdateAsync(id, model);
+            }
+            else
+            {
+                await Api.AddAsync(model);
+            }
+
             Nav.NavigateTo("/");
         }
         finally

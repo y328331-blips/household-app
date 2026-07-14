@@ -85,6 +85,7 @@ else
                         </td>
                         <td class="amount-col">¥@t.Amount.ToString("N0")</td>
                         <td class="delete-col">
+                            <a class="edit-link" href="@($"/input/{t.Id}")" title="編集">編集</a>
                             <button type="button" class="delete-button" title="削除" @onclick="() => DeleteAsync(t)">削除</button>
                         </td>
                     </tr>
